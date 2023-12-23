@@ -1,7 +1,7 @@
 package ecommerce.model;
 
-public class Produto {
-	public int id;
+public abstract class Produto {
+	private int id;
 	public String nome;
 	public double preco;
 	public int quantidade;
@@ -17,35 +17,23 @@ public class Produto {
 		return id;
 	}
 
-	public void setId(int id) {
-		this.id = id;
-	}
-
 	public String getNome() {
 		return nome;
-	}
-
-	public void setNome(String nome) {
-		this.nome = nome;
 	}
 
 	public double getPreco() {
 		return preco;
 	}
 
-	public void setPreco(double preco) {
-		this.preco = preco;
-	}
-
 	public int getQuantidade() {
 		return quantidade;
 	}
 
-	public void setQuantidade(int quantidade) {
-		this.quantidade = quantidade;
+	public void decrementarQuantidade(int quantidade) throws Exception {
+		if (this.quantidade < quantidade) {
+			throw new Exception("Produto Insuficiente, altere a quantidade");
+		} 
+		this.quantidade -= quantidade;
 	}
-	
-	
-	
-	
+
 }

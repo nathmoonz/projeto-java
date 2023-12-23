@@ -1,9 +1,15 @@
 package loja;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Locale;
 import java.util.Scanner;
+
+import ecommerce.controller.CarrinhoController;
+import ecommerce.controller.Catalogo;
+import ecommerce.model.Produto;
 
 public class LojaMenu {
 
@@ -12,6 +18,9 @@ public class LojaMenu {
 		Scanner leia = new Scanner(System.in);
 		int opcao = 0;
 		boolean menu = true;
+		Catalogo catalogo = new Catalogo();
+		CarrinhoController carrinho = new CarrinhoController();
+		DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
 
 		while (menu) {
 
@@ -38,20 +47,47 @@ public class LojaMenu {
 			switch (opcao) {
 			case 1:
 				System.out.println("");
+				catalogo.visualizarItensCatalogo();
 				keyPress();
 				break;
 			case 2:
-				System.out.println("");
+
+				System.out.print("Digite o ID do produto que deseja adicionar ao carrinho: ");
+				int idProduto = leia.nextInt();
+
+				try {
+					Produto produto = catalogo.listaProdutos.get(idProduto);
+					String precoFormatado = decimalFormat.format(produto.getPreco());
+					boolean sair = false;
+					while (!sair) {
+						System.out.println("---------------------------------");
+						System.out.println("Nome: " + produto.getNome());
+						System.out.println("Preço: R$ " + precoFormatado);
+						System.out.println("Quantidade em estoque: " + produto.getQuantidade());
+						System.out.println("---------------------------------");
+						System.out.println("Insira a quantidade desejada: ");
+
+						int quantidade = leia.nextInt();
+						if (quantidade > produto.getQuantidade()) {
+							System.out.println("Quantidade em estoque insuficiente");
+						} else {
+							carrinho.adicionarProduto(produto, quantidade);
+							sair = true;
+						}
+					}
+
+				} catch (Exception e) {
+					System.out.println("Produto não encotrado!");
+				}
+
 				keyPress();
 				break;
 			case 3:
-				// visualizar carrinho
-				System.out.println("");
+				carrinho.exibirCarrinho();
 				keyPress();
 				break;
 			case 4:
-				// Mostrar valor final e produtos selecionados
-				System.out.println("");
+				carrinho.finalizarCompra();
 				keyPress();
 				break;
 			case 5:
